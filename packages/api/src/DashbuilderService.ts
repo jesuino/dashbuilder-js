@@ -13,28 +13,39 @@ export interface DashboardResponse {
 }
 
 export interface RequestInfo {
-    host: string;
+    url: string;
     user: string;
     password: string;
 }
 
-export class DashbuiderService {
+export function embeddedRuntimeUrl(url: string,
+    page: string,
+    dashboardId?: string) {
+
+    let embeddedUrl = `${url}?standalone&perspective=${page}`;
+    if (dashboardId) {
+        embeddedUrl = `${embeddedUrl}&import=${dashboardId}`;
+    }
+    return embeddedUrl;
+}
+
+export class DashbuilderService {
 
     private requestInfo: RequestInfo;
     private authToken: string;
 
-    public DashbuiderService(requestInfo: RequestInfo) {
+    constructor(requestInfo: RequestInfo) {
         this.requestInfo = requestInfo;
         this.authToken = btoa(requestInfo.user + ":" + requestInfo.password);
     }
 
     public listDashboards(): Promise<ApiResponse> {
-        const url = `${this.requestInfo.host}/rest/api`;
+        const url = `${this.requestInfo.url}/rest/api`;
         return this.request(url).then(obj => JSON.parse(obj) as ApiResponse);
     }
 
     public listPages(id: string): Promise<DashboardResponse> {
-        const url = `${this.requestInfo.host}/rest/api/dashboard/${id}`;
+        const url = `${this.requestInfo.url}/rest/api/dashboard/${id}`;
         return this.request(url).then(obj => JSON.parse(obj) as DashboardResponse);
     }
 
