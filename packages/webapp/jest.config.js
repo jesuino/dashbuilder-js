@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-const nodeExternals = require("webpack-node-externals");
-const { merge } = require("webpack-merge");
-const common = require("../../webpack.common.config");
-
-module.exports = merge(common, {
-  entry: {
-    index: "./src/index.ts"
+module.exports = {
+  reporters: ["default"],
+  moduleDirectories: ["node_modules", "src"],
+  moduleFileExtensions: ["js", "jsx", "ts", "tsx"],
+  testRegex: "/__tests__/.*\\.test\\.(jsx?|tsx?)$",
+  transform: {
+    "^.+\\.jsx?$": "babel-jest",
+    "^.+\\.tsx?$": "ts-jest"
   },
-  output: {
-    libraryTarget: "commonjs2"
-  },
-  externals: [nodeExternals({ modulesDir: "../../node_modules" })],
-});
+  moduleNameMapper: {
+    "\\.(css|less|sass|scss)$": "<rootDir>/__mocks__/styleMock.js"
+  }
+};
